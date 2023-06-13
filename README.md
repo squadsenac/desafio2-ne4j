@@ -1,8 +1,11 @@
 # Desafio 2 - Neo4j
 
 ## Alunos:
-Fábio Cabral 
+
+Fábio Cabral
+
 Kaiky Tupinambá
 
-## Turma: 
+## Turma:
+
 ADS Noite (13.4)
