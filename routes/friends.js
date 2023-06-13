@@ -1,7 +1,7 @@
-// routes/friends.js
 const express = require('express');
 const router = express.Router();
 const graphDBConnect = require('../middleware/graphDBConnect');
+
 function formatResponse(resultObj) {
   const result = [];
   if (resultObj.records.length > 0) {

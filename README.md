@@ -9,3 +9,11 @@ Kaiky Tupinambá
 ## Turma:
 
 ADS Noite (13.4)
+
+## Linguagem:
+
+Javascript 
+
+## Frameworks:
+
+Node.js, Express
