@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const graphDBConnect = require('../middleware/graphDBConnect');
+const graphDBConnect = require('../middleware/connectNeo4j');
 
 function formatResponse(resultObj) {
   const result = [];
@@ -14,20 +14,20 @@ function formatResponse(resultObj) {
 router.post('/add', async (req, res) => {
   const { source, destination } = req.body;
   if (!source || source < 1 || !destination || destination < 1) {
-    return res.status(400).send('Invalid Inputs');
+    return res.status(400).send('Input inválido.');
   }
-  const query = `MATCH (n:Users {id:$source}), (f:Users {id:$destination}) CREATE (n)-[:FRIEND]->(f) RETURN n`;
+  const query = `MATCH (n:Usuarios {id:$source}), (f:Usuarios {id:$destination}) CREATE (n)-[:FRIEND]->(f) RETURN n`;
   const params = {
     source,
     destination
   };
   const resultObj = await graphDBConnect.executeCypherQuery(query, params);
   const result = formatResponse(resultObj);
-  res.send('Friends relation created successfully');
+  res.send('Relação de amizade criada com sucesso.');
 });
 router.get('/list/:id', async (req, res) => {
   const { id } = req.params;
-  const query = 'MATCH (n:Users {id: $id})-[:FRIEND]-(f) RETURN f LIMIT 100';
+  const query = 'MATCH (n:Usuarios {id: $id})-[:FRIEND]-(f) RETURN f LIMIT 100';
   const params = { id: parseInt(id) };
   const resultObj = await graphDBConnect.executeCypherQuery(query, params);
   const result = formatResponse(resultObj);
@@ -36,16 +36,16 @@ router.get('/list/:id', async (req, res) => {
 router.post('/delete', async (req, res) => {
   const { source, destination } = req.body;
   if (!source || source < 1 || !destination || destination < 1) {
-    return res.status(400).send('Invalid Inputs');
+    return res.status(400).send('Input inválido.');
   }
   const query =
-    'MATCH (n:Users {id:$source})-[r:FRIEND]-(f:Users {id:$destination}) DELETE r';
+    'MATCH (n:Usuarios {id:$source})-[r:FRIEND]-(f:Usuarios {id:$destination}) DELETE r';
   const params = {
     source,
     destination
   };
   const resultObj = await graphDBConnect.executeCypherQuery(query, params);
   const result = formatResponse(resultObj);
-  res.send('Friends relation deleted successfully');
+  res.send('Relação de amizade removida com sucesso.');
 });
 module.exports = router;

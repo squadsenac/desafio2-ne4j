@@ -8,6 +8,6 @@ require('./startup/routes')(app);
 require('./startup/config')();
 
 const port = 7000;
-const server = app.listen(port, () => winston.info(`Listening on port ${port}...`));
+const server = app.listen(port, () => winston.info(`Rodando na porta ${port}...`));
 
 module.exports = server;

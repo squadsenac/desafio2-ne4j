@@ -1,7 +1,6 @@
-// routes/users.js
 const express = require('express');
 const router = express.Router();
-const graphDBConnect = require('../middleware/graphDBConnect');
+const graphDBConnect = require('../middleware/connectNeo4j');
 
 function formatResponse(resultObj) {
   const result = [];
@@ -14,14 +13,14 @@ function formatResponse(resultObj) {
 }
 
 router.post('/', async function(req, res) {
-  const { id, name, email } = req.body;
-  if (!id || id < 1 || !name || !email) {
-    return res.status(400).send('Invalid Inputs');
+  const { id, nome, email } = req.body;
+  if (!id || id < 1 || !nome || !email) {
+    return res.status(400).send('Input inválido');
   }
-  const query = `CREATE (n:Users {id:$id, name:$name, email: $email}) RETURN n`;
+  const query = `CREATE (n:Usuarios {id:$id, nome:$nome, email: $email}) RETURN n`;
   const params = {
     id: parseInt(id),
-    name,
+    nome,
     email
   };
   const resultObj = await graphDBConnect.executeCypherQuery(query, params);
@@ -30,7 +29,7 @@ router.post('/', async function(req, res) {
 });
 
 router.get('/', async function(req, res) {
-  const query = 'MATCH (n:Users) RETURN n LIMIT 100';
+  const query = 'MATCH (n:Usuarios) RETURN n LIMIT 100';
   const params = {};
   const resultObj = await graphDBConnect.executeCypherQuery(query, params);
   const result = formatResponse(resultObj);
@@ -39,7 +38,7 @@ router.get('/', async function(req, res) {
 
 router.get('/:id', async function(req, res) {
   const { id } = req.params;
-  const query = 'MATCH (n:Users {id: $id}) RETURN n LIMIT 100';
+  const query = 'MATCH (n:Usuarios {id: $id}) RETURN n LIMIT 100';
   const params = { id: parseInt(id) };
   const resultObj = await graphDBConnect.executeCypherQuery(query, params);
   const result = formatResponse(resultObj);
@@ -48,13 +47,13 @@ router.get('/:id', async function(req, res) {
 
 router.patch('/:id', async function(req, res) {
   const { id } = req.params;
-  const { name, email } = req.body;
-  let strName = name ? ` n.name = '${name}' ` : '';
+  const { nome, email } = req.body;
+  let strName = nome ? ` n.nome = '${name}' ` : '';
   let strEmail = email ? ` n.email = '${email}' ` : '';
   if (strName && strEmail) {
     strEmail = ',' + strEmail;
   }
-  const query = `MATCH (n:Users {id: $id}) SET ${strName} ${strEmail} RETURN n`;
+  const query = `MATCH (n:Usuarios {id: $id}) SET ${strName} ${strEmail} RETURN n`;
   const params = { id: parseInt(id) };
   const resultObj = await graphDBConnect.executeCypherQuery(query, params);
   const result = formatResponse(resultObj);
@@ -63,10 +62,10 @@ router.patch('/:id', async function(req, res) {
 
 router.delete('/:id', async function(req, res) {
   const { id } = req.params;
-  const query = 'MATCH (n:Users {id: $id}) DELETE n';
+  const query = 'MATCH (n:Usuarios {id: $id}) DELETE n';
   const params = { id: parseInt(id) };
   const resultObj = await graphDBConnect.executeCypherQuery(query, params);
-  res.send('Delete success');
+  res.send('Remoção bem-sucedida.');
 });
 
 module.exports = router;
