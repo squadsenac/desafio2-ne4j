@@ -1,4 +1,4 @@
-const neo4j = require('neo4j-driver').v1;
+const neo4j = require('neo4j-driver');
 const config = require('config');
 const uri = config.get('dbHost');
 const user = config.get('dbUser');
